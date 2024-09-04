@@ -1,3 +1,4 @@
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { useEffect, useState } from "react";
 
 const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
@@ -6,8 +7,12 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
         "default" : "py-1 px-2 rounded-2xl bg-slate-500 bg-opacity-10",
         "submitable" : "py-1 px-2 rounded-2xl bg-slate-900 hover:bg-slate-800"
     }
+
     const [inputIsValide, setInputIsValide] = useState<boolean>(false);
     const [characters, setCharacters] = useState<string>("");
+
+    const [showEmojiPiker, setShowEmojiPiker] = useState<boolean>(false);
+
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setCharacters(e.target.value);
@@ -15,9 +20,16 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
 
     const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(inputIsValide)
-        {
-            callback(characters);
+        if(inputIsValide) callback(characters);
+    }
+
+    const handleEmojiPikerButton = () => {
+        setShowEmojiPiker(!showEmojiPiker);
+    }
+
+    const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
+        if(emojiData.emoji) {
+            //
         }
     }
 
@@ -25,29 +37,44 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
         if(characters.length >= minimalCharacter)
         {
             setInputIsValide(true);
+            return;
         } 
-        else 
-        {
-            setInputIsValide(false);
-        }
+        setInputIsValide(false);
     }, [characters])
 
     return (
         <form
-            className="flex flex-row w-full"
+            className="flex w-full flex-col absolute bottom-[12%] space-y-2"
             onSubmit={onSubmit}
         >
-            <input
-                className="w-full px-3 py-2 border-solid rounded-full focus:outline-none bg-secondary mx-2 font-medium text-slate-600"
-                type="text" 
-                name="task-input" 
-                id="task-input"
-                placeholder="Aa"
-                onChange={handleChange}
-            />
-            <button className={inputIsValide ? buttonStyle.submitable : buttonStyle.default}>
-                <span>{inputIsValide ? "👌" : "✍️"}</span>
-            </button>
+            <div className="w-full flex justify-end">
+                <EmojiPicker
+                    className="mx-4"
+                    open={showEmojiPiker}
+                    onEmojiClick={onEmojiClick}
+                />
+            </div>
+            <div className="w-full flex">
+                <div className="flex w-full px-3 py-2 border-solid rounded-full bg-secondary mx-2">
+                    <input
+                        className="w-full focus:outline-none bg-secondary font-medium text-slate-600"
+                        type="text" 
+                        name="task-input" 
+                        id="task-input"
+                        placeholder="Aa"
+                        onChange={handleChange}
+                    />
+                    <button
+                        onClick={handleEmojiPikerButton}
+                        type="button" 
+                        className="w-7 border-solid rounded-full bg-slate-300 hover:bg-slate-400"
+                    >🥸</button>
+
+                </div>
+                <button type="submit" className={inputIsValide ? buttonStyle.submitable : buttonStyle.default}>
+                    <span>✈️</span>
+                </button>
+            </div>
         </form>
     )
 }
