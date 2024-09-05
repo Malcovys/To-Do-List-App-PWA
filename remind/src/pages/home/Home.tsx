@@ -1,28 +1,45 @@
 import Input from "../../components/ui/Input"
-import Card from "../../components/ui/Card";
+import TaskCard from "../../components/ui/TaskCard";
 import { useState } from "react";
 
 interface Task {
     id: number,
-    tile: string,
-    create_at: Date,
-    update_at: Date,
+    title : string,
+    create_at: string,
+    update_at: string,
     isDone: boolean
-}
+};
 
 function Home() {
-    const [tasks, setTask] = useState<Task[]>();
+    const [tasks, setTask] = useState<Task[]>([]);
 
     const onSubmit = (input : string) => {
-        console.log(input);
+        let newTask : Task = {
+            id: -1,
+            title : input,
+            create_at: new Date().toISOString(),
+            update_at: new Date().toISOString(),
+            isDone: false
+        };
+
+        setTask([...tasks, newTask]);
+        console.log(tasks);
     }
 
     return (
         <div className="mx-auto h-[calc(100dvh)] flex flex-col items-center space-y-2">
             <div id="card-container" className="w-full h-full space-y-2 pt-2">
-                <Card text="Task" />
-                <Card text="Task" />
-                <Card text="Task" />
+                {
+                    tasks.map((task, index) => (
+                        <div key={index}>
+                            <TaskCard 
+                                id={task.id}
+                                title={task.title}
+                                isDone={task.isDone}
+                            />
+                        </div>
+                    ))
+                }
             </div>
             <div className="w-full flex justify-center items-center bg-white">
                 <Input callback={onSubmit}/>

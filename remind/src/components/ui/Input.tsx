@@ -2,7 +2,7 @@ import EmojiPicker, { EmojiClickData } from "emoji-picker-react";
 import { useEffect, useState } from "react";
 
 const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
-    const minimalCharacter = 3;
+    const minimalCharacter = 1;
     const buttonStyle = {
         "default" : "py-1 px-2 rounded-2xl bg-slate-500 bg-opacity-10",
         "submitable" : "py-1 px-2 rounded-2xl bg-slate-900 hover:bg-slate-800"
@@ -16,12 +16,13 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
        setCharacters(e.target.value);
-       console.log(characters)
     }
 
     const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(inputIsValide) callback(characters);
+        if(!inputIsValide) return;
+        callback(characters);
+        setCharacters("");
     }
 
     const handleEmojiPikerButton = () => {
@@ -30,8 +31,7 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
 
     const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
         if(emojiData.emoji) {
-            setCharacters(characters + " " + emojiData.emoji);
-            console.log(characters)
+            setCharacters(`${characters}  ${emojiData.emoji}`);
         }
         
         if(event.cancelable) setShowEmojiPiker(false);
