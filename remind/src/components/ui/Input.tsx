@@ -15,7 +15,8 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
 
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setCharacters(e.target.value);
+       setCharacters(e.target.value);
+       console.log(characters)
     }
 
     const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
@@ -29,8 +30,11 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
 
     const onEmojiClick = (emojiData: EmojiClickData, event: MouseEvent) => {
         if(emojiData.emoji) {
-            //
+            setCharacters(characters + " " + emojiData.emoji);
+            console.log(characters)
         }
+        
+        if(event.cancelable) setShowEmojiPiker(false);
     }
 
     useEffect(() => {
@@ -47,7 +51,7 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
             className="flex w-full flex-col absolute bottom-[12%] space-y-2"
             onSubmit={onSubmit}
         >
-            <div className="w-full flex justify-end">
+            <div className="w-full flex justify-end z-10">
                 <EmojiPicker
                     className="mx-4"
                     open={showEmojiPiker}
@@ -62,6 +66,7 @@ const Input : React.FC<{callback:(input:string) => void}> = ({callback}) => {
                         name="task-input" 
                         id="task-input"
                         placeholder="Aa"
+                        value={characters}
                         onChange={handleChange}
                     />
                     <button
