@@ -24,7 +24,6 @@ const TaskCreator: React.FC<{submitCallback:(input : string) => void | null }> =
 
   const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
-    console.log(inputValue.trim().length);
   }
 
   useEffect(() => {
