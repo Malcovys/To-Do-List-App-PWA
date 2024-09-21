@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TaskList from "./components/personal/TaskList";
+import TaskCreator from "./components/personal/TaskCreator";
 
 export interface Task {
   id: number,
@@ -38,10 +39,7 @@ function App() {
         <TaskList tasks={tasks} />
       </div>
       <div className="absolute bottom-5 right-7">
-        <button 
-          className="bg-blue-500 text-center text-3xl text-white rounded-lg w-11 h-11 "
-          onClick={displayTaskForm}
-        >+</button>
+        <TaskCreator/>
       </div>
     </div>
   )
