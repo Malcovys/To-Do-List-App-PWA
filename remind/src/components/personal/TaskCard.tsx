@@ -1,13 +1,18 @@
+import { Task } from "../../App";
 import { MagicCard } from "../magicui/magic-card";
 
-const TaskCard: React.FC<{id: number,title: string,completed: boolean}> = (task) => {
+const TaskCard: React.FC<{
+  task:Task, 
+  changeCallback:(id:number) => void | null, 
+  removeCallback:(id:number) => void | null
+}> = ({task, changeCallback, removeCallback}) => {
 
   const handleChange = () => {
-    console.log("change");
+    if(changeCallback != null) changeCallback(task.id);
   }
 
   const handleRemove = () => {
-    console.log("Remove");
+    if(removeCallback != null) removeCallback(task.id);
   }
 
   return (
