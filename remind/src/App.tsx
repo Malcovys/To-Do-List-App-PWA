@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskList from "./components/personal/TaskList";
 import TaskCreator from "./components/personal/TaskCreator";
 
@@ -9,25 +9,42 @@ export interface Task {
 };
 
 function App() {
-  const [tasks, setTask] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [newTask, setNewTask] = useState("");
+  const [removeTaskIndex, setRemoveTaskIndex] = useState(-1);
 
   const hadleNewTask = (input : string) => {
-      let newTask : Task = {
+      setNewTask(input);
+  }
+
+  const handleUpdateTask = (index:number) => {
+    tasks[index].completed = !tasks[index].completed;
+  }
+
+  const handleRemoveTask = (index:number) => {
+    setRemoveTaskIndex(index);
+  }
+
+  useEffect(()=> {
+      if(newTask.trim() != "") {
+        let task : Task = {
           id: -1,
-          title : input,
+          title : newTask,
           completed: false
-      };
-      setTask([...tasks, newTask]);
-      console.log(tasks);
-  }
+        };
 
-  const handleUpdateTask = (id:number) => {
-    console.log(id);
-  }
+        setTasks([...tasks, task]);
+        setNewTask("");
+      }
 
-  const handleRemoveTask = (id:number) => {
-    console.log(id);
-  }
+      if(removeTaskIndex != -1) {
+        let updatedTaskList = tasks;
+        updatedTaskList.splice(removeTaskIndex, 1);
+        
+        setTasks(updatedTaskList);
+        setRemoveTaskIndex(-1);
+      }
+  }, [tasks, newTask, removeTaskIndex])
 
   return (
     <div className="p-2">

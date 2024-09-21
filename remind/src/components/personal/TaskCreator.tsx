@@ -11,6 +11,12 @@ const TaskCreator: React.FC<{submitCallback:(input : string) => void | null }> =
     "submitable" : "bg-black text-white text-sm px-2 py-1 rounded-md w-28 hover:bg-opacity-75"
   }
 
+  /* Helper */
+  function capitalizeFirstLetter(str:string) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   /* Component behaviors */
   const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,7 +29,7 @@ const TaskCreator: React.FC<{submitCallback:(input : string) => void | null }> =
   }
 
   const handleInputChange = (event:React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setInputValue(capitalizeFirstLetter(event.target.value));
   }
 
   useEffect(() => {

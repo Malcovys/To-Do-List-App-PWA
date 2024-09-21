@@ -6,12 +6,12 @@ const TaskList : React.FC<{
     changeCallback:(id:number) => void | null, 
     removeCallback:(id:number) => void | null
 }> = ({tasks, changeCallback, removeCallback}) => {
-    const onChange = (id:number) => {
-        if(changeCallback != null) changeCallback(id);
+    const onChange = (index:number) => {
+        if(changeCallback != null) changeCallback(index);
     }
 
-    const onRemove = (id:number) => {
-        if(removeCallback != null) removeCallback(id);
+    const onRemove = (index:number) => {
+        if(removeCallback != null) removeCallback(index);
     }
 
     return (
@@ -21,6 +21,7 @@ const TaskList : React.FC<{
                     <div key={index}>
                         <TaskCard 
                             task={task}
+                            index={index}
                             changeCallback={onChange}
                             removeCallback={onRemove}
                         />

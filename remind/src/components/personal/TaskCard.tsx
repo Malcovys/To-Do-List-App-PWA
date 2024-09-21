@@ -1,18 +1,23 @@
+import { useState } from "react";
 import { Task } from "../../App";
 import { MagicCard } from "../magicui/magic-card";
 
 const TaskCard: React.FC<{
-  task:Task, 
+  task:Task,
+  index: number,
   changeCallback:(id:number) => void | null, 
   removeCallback:(id:number) => void | null
-}> = ({task, changeCallback, removeCallback}) => {
+}> = ({task, index, changeCallback, removeCallback}) => {
+  const [completed, SetCompleted] = useState(task.completed);
+
 
   const handleChange = () => {
-    if(changeCallback != null) changeCallback(task.id);
+    SetCompleted(!task.completed);
+    if(changeCallback != null) changeCallback(index);
   }
 
   const handleRemove = () => {
-    if(removeCallback != null) removeCallback(task.id);
+    if(removeCallback != null) removeCallback(index);
   }
 
   return (
@@ -22,18 +27,18 @@ const TaskCard: React.FC<{
             gradientColor={"#D9D9D955"}
         >
           <div className="content flex items-center px-5">
-            <div className="w-[70vw] sm:w-[82vw] md:w-[85vw] lg:w-[90vw]">
+            <div className="w-[70vw] sm:w-[82vw] md:w-[85vw] lg:w-[90vw] flex items-center">
               <input
-                className="mr-5"
+                className="mr-5 size-5"
                 type="checkbox" 
                 name="task" 
-                id={`${task.id}`}
-                checked={task.completed}
+                id={`${index}`}
+                checked={completed}
                 onChange={handleChange}
               />
               <label 
-                htmlFor={`${task.id}`} 
-                className={task.completed ? "line-through text-xl":"text-xl"}
+                htmlFor={`${index}`} 
+                className={completed ? "line-through text-xl":"text-xl"}
               >{task.title}</label>
             </div>
             <button
