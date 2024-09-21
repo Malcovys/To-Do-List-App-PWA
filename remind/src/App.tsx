@@ -1,11 +1,10 @@
-import './App.css'
-import Home from './pages/home/Home'
+import ToDo from "./components/personal/ToDo"
 
 function App() {
 
   return (
     <div>
-      <Home />
+      <ToDo />
     </div>
   )
 }

@@ -1,5 +1,5 @@
-import Input from "../../components/ui/Input"
-import TaskCard from "../../components/ui/TaskCard";
+import Input from "./Input"
+import TaskCard from "./TaskCard";
 import { useState } from "react";
 
 interface Task {
@@ -10,7 +10,7 @@ interface Task {
     isDone: boolean
 };
 
-function Home() {
+function ToDo() {
     const [tasks, setTask] = useState<Task[]>([]);
 
     const onSubmit = (input : string) => {
@@ -48,4 +48,4 @@ function Home() {
     )
   }
   
-  export default Home
+  export default ToDo
