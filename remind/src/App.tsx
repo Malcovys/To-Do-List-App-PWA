@@ -10,7 +10,6 @@ export interface Task {
 
 function App() {
   //const [tasks, setTask] = useState<Task[]>([]);
-  const [createTask, setCreateTask] = useState(false);
 
   const tasks = [
     { id: 1, title: "Learn TypeScript", completed: false },
@@ -27,10 +26,6 @@ function App() {
       // setTask([...tasks, newTask]);
       // console.log(tasks);
   }
-
-  const displayTaskForm = () => {
-    console.log("Form");
-  };
 
   return (
     <div className="p-2">
