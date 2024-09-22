@@ -63,7 +63,7 @@ const TaskCreator: React.FC<{submitCallback:(input : string) => void | null }> =
   return (
     <form onSubmit={handleSubmit}>
       <Modal>
-        <ModalTrigger className="bg-black text-white rounded-lg w-11 h-11 flex justify-center items-center">
+        <ModalTrigger className="bg-black text-white rounded-lg w-11 h-11 flex justify-center items-center z-50">
           <span className="text-center text-3xl">+</span>
         </ModalTrigger>
         <ModalBody className="mx-2">

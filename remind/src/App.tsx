@@ -9,42 +9,61 @@ export interface Task {
 };
 
 function App() {
+  const taskListKey = 'taskList';
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
-  const [removeTaskIndex, setRemoveTaskIndex] = useState(-1);
 
   const hadleNewTask = (input : string) => {
       setNewTask(input);
   }
 
-  const handleUpdateTask = (index:number) => {
-    tasks[index].completed = !tasks[index].completed;
+  const handleUpdateTask = (index: number) => {
+    const updatedTasks = tasks.map((task, i) =>
+      i === index ? { ...task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
+    postTasks(updatedTasks);
+  };
+
+  const handleRemoveTask = (index: number) => {
+    const updatedTasks = tasks.filter((_, i) => i !== index);
+    setTasks(updatedTasks);
+    postTasks(updatedTasks);
+  };
+
+  // Récupérer les tâches depuis localStorage
+  function getTasks() {
+    const storedTasks = window.localStorage.getItem(taskListKey);
+    if (storedTasks) {
+      const parsedTasks: Task[] = JSON.parse(storedTasks);
+      setTasks(parsedTasks);
+    }
   }
 
-  const handleRemoveTask = (index:number) => {
-    setRemoveTaskIndex(index);
+  // Enregistrer les tâches dans localStorage
+  function postTasks(updatedTasks: Task[]) {
+    window.localStorage.setItem(taskListKey, JSON.stringify(updatedTasks));
   }
 
-  useEffect(()=> {
-      if(newTask.trim() != "") {
-        let task : Task = {
-          id: -1,
-          title : newTask,
-          completed: false
-        };
 
-        setTasks([...tasks, task]);
-        setNewTask("");
-      }
+  // Initialiser les tâches lors du montage
+  useEffect(() => {
+    getTasks();
+  }, []);
 
-      if(removeTaskIndex != -1) {
-        let updatedTaskList = tasks;
-        updatedTaskList.splice(removeTaskIndex, 1);
-        
-        setTasks(updatedTaskList);
-        setRemoveTaskIndex(-1);
-      }
-  }, [tasks, newTask, removeTaskIndex])
+  // Ajouter une nouvelle tâche
+  useEffect(() => {
+    if (newTask.trim() !== "") {
+      const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
+      const task: Task = { id: newId, title: newTask, completed: false };
+
+      const updatedTasks = [...tasks, task];
+      setTasks(updatedTasks);
+      postTasks(updatedTasks);
+      setNewTask("");
+    }
+  }, [newTask]);
 
   return (
     <div className="p-2">

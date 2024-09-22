@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/components/lib/utils.ts","./src/components/magicui/magic-card.tsx","./src/components/personal/Input.tsx","./src/components/personal/TaskCard.tsx","./src/components/personal/TaskCreator.tsx","./src/components/personal/TaskList.tsx","./src/components/ui/animated-modal.tsx"],"version":"5.6.2"}
