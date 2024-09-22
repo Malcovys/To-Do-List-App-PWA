@@ -10,13 +10,14 @@ import React, {
   useState,
 } from "react";
 
+/* Modal contexte */
 interface ModalContextType {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
+const ModalContext = createContext<ModalContextType | undefined>(undefined); // contexte creation
 
-const ModalContext = createContext<ModalContextType | undefined>(undefined);
-
+/* Modal provider */
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
   const [open, setOpen] = useState(false);
 
@@ -27,18 +28,21 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+/* use Modal */
 export const useModal = () => {
   const context = useContext(ModalContext);
   if (!context) {
-    throw new Error("useModal must be used within a ModalProvider");
+    throw new Error("useModal must be used within a ModalProvider"); ///
   }
   return context;
 };
 
+/* Modal */
 export function Modal({ children }: { children: ReactNode }) {
   return <ModalProvider>{children}</ModalProvider>;
 }
 
+/* Modal trigger */
 export const ModalTrigger = ({
   children,
   className,
@@ -60,6 +64,7 @@ export const ModalTrigger = ({
   );
 };
 
+/* Modal body */
 export const ModalBody = ({
   children,
   className,
@@ -67,8 +72,9 @@ export const ModalBody = ({
   children: ReactNode;
   className?: string;
 }) => {
-  const { open } = useModal();
+  const { open } = useModal(); // mondal state
 
+  // Modale state change behavior
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -78,8 +84,8 @@ export const ModalBody = ({
   }, [open]);
 
   const modalRef = useRef(null);
-  const { setOpen } = useModal();
-  useOutsideClick(modalRef, () => setOpen(false));
+  const { setOpen } = useModal(); // modal state setter
+  useOutsideClick(modalRef, () => setOpen(false)); // close modal behavior
 
   return (
     <AnimatePresence>
@@ -138,6 +144,7 @@ export const ModalBody = ({
   );
 };
 
+/* Modal content */
 export const ModalContent = ({
   children,
   className,
@@ -152,6 +159,7 @@ export const ModalContent = ({
   );
 };
 
+/* Modal footer */
 export const ModalFooter = ({
   children,
   className,
@@ -171,6 +179,7 @@ export const ModalFooter = ({
   );
 };
 
+/* Modal Overlay */
 const Overlay = ({ className }: { className?: string }) => {
   return (
     <motion.div
@@ -190,6 +199,7 @@ const Overlay = ({ className }: { className?: string }) => {
   );
 };
 
+/* Modal close icon */
 const CloseIcon = () => {
   const { setOpen } = useModal();
   return (
