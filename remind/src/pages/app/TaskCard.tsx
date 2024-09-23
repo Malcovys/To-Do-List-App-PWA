@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Task } from "../../App";
-import { MagicCard } from "../magicui/magic-card";
+import { MagicCard } from "../../components/magicui/magic-card";
+import { Task } from "./App";
 
 const TaskCard: React.FC<{
   task:Task,

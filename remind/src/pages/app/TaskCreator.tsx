@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalTrigger, useModal } from "../ui/animated-modal";
-import { cn } from "../lib/utils";
+import { Modal, ModalBody, ModalContent, ModalFooter, ModalTrigger, useModal } from "../../components/ui/animated-modal";
+import { cn } from "../../components/lib/utils";
 
 const SubmitBtn = ({
   children, className

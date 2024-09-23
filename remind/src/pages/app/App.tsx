@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import TaskList from "./components/personal/TaskList";
-import TaskCreator from "./components/personal/TaskCreator";
+import TaskList from "./TaskList";
+import TaskCreator from "./TaskCreator";
 
 export interface Task {
   id: number,
@@ -69,7 +69,7 @@ function App() {
     <div className="p-2">
       <div className="flex flex-col space-y-4">
         <h1 className="font-semibold text-2xl">To-Do list</h1>
-        <TaskList 
+        <TaskList
           tasks={tasks}
           changeCallback={handleUpdateTask}
           removeCallback={handleRemoveTask}

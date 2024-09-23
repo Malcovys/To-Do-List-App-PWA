@@ -1,4 +1,5 @@
-import { Task } from "../../App";
+
+import { Task } from "./App";
 import TaskCard from "./TaskCard";
 
 const TaskList : React.FC<{
