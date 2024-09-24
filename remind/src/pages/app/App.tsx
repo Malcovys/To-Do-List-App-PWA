@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import TaskList from "./TaskList";
-import TaskCreator from "./TaskCreator";
 import { cn } from "../../components/lib/utils";
+import { signInWithGoogle } from "../../firebase/firebase";
+import { User } from "firebase/auth";
+import Tasks from "./Tasks";
+import { localStorageUidKey } from "../../layout/Layout";
 
 export interface Task {
   id: number,
@@ -9,12 +11,12 @@ export interface Task {
   completed: boolean
 };
 
-function SyncDatabaseBtn () {
-  const [synced, setSynced] = useState(false);
+function SyncDatabaseBtn ({ auth, callback }: {auth: boolean, callback: (user: User|undefined) => void }) {
   const style = { sync: "bg-green-500", notSync: "bg-slate-500" };
 
-  const handleClick = () => {
-    console.log("sync to data bases");
+  const handleClick = async () => {
+    const user = await signInWithGoogle();
+    callback(user);
   }
 
   return (
@@ -28,84 +30,40 @@ function SyncDatabaseBtn () {
         <path d="M3 12A9 3 0 0 0 21 12"/>
       </svg>
       <div className="relative">
-        <div className={cn("absolute right-0 bottom-0 size-2 rounded-full",synced ? style.sync : style.notSync)}></div>
+        <div className={cn("absolute right-0 bottom-0 size-2 rounded-full",auth ? style.sync : style.notSync)}></div>
       </div>
     </button>
   )
 }
 
 function App() {
-  const taskListKey = 'taskList';
+  const [uid, setUid] = useState("");
+  const [auth, setAuth] = useState(false);
 
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [newTask, setNewTask] = useState("");
-
-  const hadleNewTask = (input : string) => {
-      setNewTask(input);
+  const handleSingIn = async (user:User|undefined) => {
+    if (user == undefined) return;
+    setUid(user.uid); // Mettre à jour l'état avec l'UID
+    setAuth(true);
+    window.localStorage.setItem(localStorageUidKey, user.uid);
   }
 
-  const handleUpdateTask = (index: number) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updatedTasks);
-    postTasks(updatedTasks);
-  };
-
-  const handleRemoveTask = (index: number) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
-    postTasks(updatedTasks);
-  };
-
-  // Récupérer les tâches depuis localStorage
-  function getTasks() {
-    const storedTasks = window.localStorage.getItem(taskListKey);
-    if (storedTasks) {
-      const parsedTasks: Task[] = JSON.parse(storedTasks);
-      setTasks(parsedTasks);
-    }
-  }
-
-  // Enregistrer les tâches dans localStorage
-  function postTasks(updatedTasks: Task[]) {
-    window.localStorage.setItem(taskListKey, JSON.stringify(updatedTasks));
-  }
-
-
-  // Initialiser les tâches lors du montage
   useEffect(() => {
-    getTasks();
-  }, []);
+      const uid = window.localStorage.getItem(localStorageUidKey)
+      setUid(uid ? uid : "");
 
-  // Ajouter une nouvelle tâche
-  useEffect(() => {
-    if (newTask.trim() !== "") {
-      const newId = tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1;
-      const task: Task = { id: newId, title: newTask, completed: false };
-
-      const updatedTasks = [...tasks, task];
-      setTasks(updatedTasks);
-      postTasks(updatedTasks);
-      setNewTask("");
-    }
-  }, [newTask]);
+      if(uid && uid.trim().length > 0) setAuth(true);
+  }, [])
 
   return (
     <>
       <div className="flex flex-col space-y-4">
         <div className="flex items-center justify-between shadow-lg px-3 h-16">
           <h1 className="font-semibold text-2xl">To-Do list</h1>
-          <SyncDatabaseBtn/>
+          <SyncDatabaseBtn 
+            auth={auth}
+            callback={handleSingIn} />
         </div>
-        <TaskList
-          tasks={tasks}
-          changeCallback={handleUpdateTask}
-          removeCallback={handleRemoveTask}
-        />
-      </div>
-      <div className="absolute bottom-5 right-7">
-        <TaskCreator submitCallback={hadleNewTask} />
+        <Tasks uid={uid}/>
       </div>
     </>
   )
