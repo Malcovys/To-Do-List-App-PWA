@@ -13,21 +13,23 @@ function SyncDatabaseBtn () {
   const [synced, setSynced] = useState(false);
   const style = { sync: "bg-green-500", notSync: "bg-slate-500" };
 
+  const handleClick = () => {
+    console.log("sync to data bases");
+  }
+
   return (
-    <button className="p-2 rounded-3xl bg-slate-100 text-slate-500">
+    <button 
+      className="p-2 rounded-full bg-slate-100 text-slate-500 hover:text-white hover:bg-black"
+      onClick={handleClick}
+    >
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-database">
         <ellipse cx="12" cy="5" rx="9" ry="3"/>
         <path d="M3 5V19A9 3 0 0 0 21 19V5"/>
         <path d="M3 12A9 3 0 0 0 21 12"/>
       </svg>
-      <span className="relative">
-        <span className="absolute left-0 bottom-0 flex h-3 w-3 items-center justify-center">
-          <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", synced ? style.sync : style.notSync)}>
-          </span>
-          <span className={cn("relative inline-flex right-0 bottom-0 size-2 rounded-full", synced ? style.sync : style.notSync)}>
-          </span>
-        </span>
-      </span>
+      <div className="relative">
+        <div className={cn("absolute right-0 bottom-0 size-2 rounded-full",synced ? style.sync : style.notSync)}></div>
+      </div>
     </button>
   )
 }
