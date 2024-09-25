@@ -39,7 +39,7 @@ const TaskCard: React.FC<{
               <label 
                 htmlFor={`${index}`} 
                 className={completed ? "line-through text-xl":"text-xl"}
-              >{task.title}</label>
+              >{task.label}</label>
             </div>
             <button
               className="text-red-600 hover:bg-slate-200 p-2 rounded-lg"

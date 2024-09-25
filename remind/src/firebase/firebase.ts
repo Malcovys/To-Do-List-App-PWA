@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
+import { addDoc, collection, DocumentData, getFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Task } from "../pages/app/App";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCN3JmbOWozCH3c9fihNvQebwLfto0cfJM",
@@ -12,16 +14,31 @@ const firebaseConfig = {
 };
 
 
+// Initialize firebase
 const app = initializeApp(firebaseConfig);
+
+// Initialize GoogleAuth and get a reference to the service
 const auth = getAuth(app);
 
+// Initialize Cloud Firestore and get a reference to the service
+const databse = getFirestore(app);
+
+// Google Auth
 export async function signInWithGoogle ()  {
   const provider = new GoogleAuthProvider();
+  const res = await signInWithPopup(auth, provider);
+  return res.user;
+}
+
+// db query
+export async function createTask (task: DocumentData, uid:string) {
+  const docRef = await addDoc(collection(databse, "tasks"), {
+    ...task,
+    uid
+  });
+  return docRef;
+}
+
+export async function getTasks (uid:string) {
   
-  try {
-    const res = await signInWithPopup(auth, provider);
-    return res.user;
-  } catch(error) {
-    console.error("auth error");
-  }
 }

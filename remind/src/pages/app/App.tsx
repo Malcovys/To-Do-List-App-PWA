@@ -7,15 +7,18 @@ import { localStorageUidKey } from "../../layout/Layout";
 
 export interface Task {
   id: number,
-  title : string,
-  completed: boolean
+  label : string,
+  completed: boolean,
 };
 
 function SyncDatabaseBtn ({ auth, callback }: {auth: boolean, callback: (user: User|undefined) => void }) {
   const style = { sync: "bg-green-500", notSync: "bg-slate-500" };
 
   const handleClick = async () => {
-    const user = await signInWithGoogle();
+    const user = await signInWithGoogle().catch((e) => {
+      console.error("Erreur lors de l'authentification : " + e);
+      return undefined;
+    });
     callback(user);
   }
 
