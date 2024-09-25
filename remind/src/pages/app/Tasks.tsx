@@ -3,7 +3,7 @@ import { Task } from "./App";
 import TaskCard from "./TaskCard";
 import TaskCreator from "./TaskCreator";
 import { localStorageTaskskey } from "../../layout/Layout";
-import { createTask } from "../../firebase/firebase";
+import { updateTaskDoc, getDocTasks } from "../../firebase/firebase";
 
 const Tasks: React.FC<{ uid: string }> = ({ uid }) => {
     const [localTasks, setLocalTasks] = useState<Task[]>([]);
@@ -43,7 +43,14 @@ const Tasks: React.FC<{ uid: string }> = ({ uid }) => {
 
     useEffect(() => {
         getTasks();
+        getDocTasks(uid);
     }, []);
+
+    useEffect(() => {
+        updateTaskDoc(localTasks, uid).catch((e) => {
+            console.error("Erreur lors de la mis à jour de la tâche: " + e);
+        });
+    }, [localTasks])
 
     useEffect(() => {
         const addTask = async () => {
@@ -58,7 +65,7 @@ const Tasks: React.FC<{ uid: string }> = ({ uid }) => {
 
                 if (uid.trim().length === 0) return;
 
-                await createTask(task, uid).catch((e) => {
+                await updateTaskDoc(updatedTasks, uid).catch((e) => {
                     console.error("Erreur lors de la création de la tâche: " + e);
                 });
             }

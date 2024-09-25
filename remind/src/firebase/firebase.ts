@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { addDoc, collection, DocumentData, getFirestore } from "firebase/firestore";
+import { doc, DocumentData, getDoc, getFirestore, setDoc } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { Task } from "../pages/app/App";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCN3JmbOWozCH3c9fihNvQebwLfto0cfJM",
@@ -21,7 +20,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // Initialize Cloud Firestore and get a reference to the service
-const databse = getFirestore(app);
+const firestore = getFirestore(app);
 
 // Google Auth
 export async function signInWithGoogle ()  {
@@ -31,14 +30,21 @@ export async function signInWithGoogle ()  {
 }
 
 // db query
-export async function createTask (task: DocumentData, uid:string) {
-  const docRef = await addDoc(collection(databse, "tasks"), {
-    ...task,
-    uid
-  });
-  return docRef;
+export async function updateTaskDoc (tasks: DocumentData, uid:string) {
+  const userDoc = doc(firestore, `users/${uid}`);
+  const docData = {
+    tasks : tasks
+  }
+  setDoc(userDoc, docData, { merge:true });
 }
 
-export async function getTasks (uid:string) {
-  
+export async function getDocTasks (uid:string) {
+  const userDoc = doc(firestore, `users/${uid}`);
+  const userSnapshot = await getDoc(userDoc);
+  if(userSnapshot.exists()) {
+    const docData = userSnapshot.data();
+    console.log(`In realtime, docData is ${JSON.stringify(docData)}`);
+  } else {
+    console.log("nothing");
+  }
 }
