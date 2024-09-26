@@ -5,8 +5,8 @@ import { Task } from "./App";
 const TaskCard: React.FC<{
   task:Task,
   index: number,
-  changeCallback:(id:number) => void | null, 
-  removeCallback:(id:number) => void | null
+  changeCallback:(index:number) => void | null, 
+  removeCallback:(index:number) => void | null
 }> = ({task, index, changeCallback, removeCallback}) => {
   const [completed, SetCompleted] = useState(task.completed);
 

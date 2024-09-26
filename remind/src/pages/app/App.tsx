@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { cn } from "../../components/lib/utils";
-import { signInWithGoogle } from "../../firebase/firebase";
+import { signInWithGoogle } from "../../database/firebase";
 import { User } from "firebase/auth";
 import Tasks from "./Tasks";
 import { localStorageUidKey } from "../../layout/Layout";
 
 export interface Task {
-  id: number,
   label : string,
   completed: boolean,
 };
@@ -66,7 +65,7 @@ function App() {
             auth={auth}
             callback={handleSingIn} />
         </div>
-        <Tasks uid={uid}/>
+        <Tasks/>
       </div>
     </>
   )

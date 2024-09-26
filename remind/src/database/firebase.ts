@@ -30,21 +30,37 @@ export async function signInWithGoogle ()  {
 }
 
 // db query
-export async function updateTaskDoc (tasks: DocumentData, uid:string) {
-  const userDoc = doc(firestore, `users/${uid}`);
-  const docData = {
-    tasks : tasks
+export async function syncTasks(tasks: DocumentData, uid: string | null) {
+  if (uid == null) {
+    console.error("UID is null, cannot sync tasks.");
+    return -1;
   }
-  setDoc(userDoc, docData, { merge:true });
+
+  try {
+    const userDoc = doc(firestore, `users/${uid}`);
+    
+    const docData = {
+      tasks: tasks
+    };
+
+    await setDoc(userDoc, docData, { merge: true });
+    return 0; /// Return 0 if success
+  } catch (error: any) {
+    console.error(`Sync data error: ${error.message}`);
+    return -1; /// Return -1 if error
+  }
 }
 
-export async function getDocTasks (uid:string) {
+export async function getTasksFromDatabase(uid: string | null) {
+  if (uid == null) return;
+
   const userDoc = doc(firestore, `users/${uid}`);
-  const userSnapshot = await getDoc(userDoc);
-  if(userSnapshot.exists()) {
-    const docData = userSnapshot.data();
-    console.log(`In realtime, docData is ${JSON.stringify(docData)}`);
+    const userSnapshot = await getDoc(userDoc);
+
+  if (userSnapshot.exists()) {
+    return userSnapshot.data().tasks;
   } else {
-    console.log("nothing");
+    console.log("No such document!");
+    return null;
   }
 }

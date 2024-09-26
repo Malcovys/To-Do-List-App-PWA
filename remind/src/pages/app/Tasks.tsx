@@ -2,87 +2,102 @@ import { useEffect, useState } from "react";
 import { Task } from "./App";
 import TaskCard from "./TaskCard";
 import TaskCreator from "./TaskCreator";
-import { localStorageTaskskey } from "../../layout/Layout";
-import { updateTaskDoc, getDocTasks } from "../../firebase/firebase";
+import { localStorageTaskskey, userID } from "../../layout/Layout";
+import { getTasksFromDatabase, syncTasks } from "../../database/firebase";
 
-const Tasks: React.FC<{ uid: string }> = ({ uid }) => {
-    const [localTasks, setLocalTasks] = useState<Task[]>([]);
-    const [newTask, setNewTask] = useState("");
+const Tasks = () => {
+    const [tasksHasLoaded, setTasksHasLoaded] = useState(false);
+    const [tasks, setTasks] = useState<Task[]>([]);
 
     const handleNewTask = (input: string) => {
-        setNewTask(input);
+        const newTask = input.trim();
+        if (newTask) {
+            const task: Task = { 
+                label: newTask, 
+                completed: false 
+            };
+            const updatedTasks = [...tasks, task];
+            setTasks(updatedTasks); // update task state
+            postTasksInLocalStorage(updatedTasks); // Store task in local storage
+        }
     };
 
-    const handleUpdateTask = (index: number) => {
-        const updatedTasks = localTasks.map((task, i) =>
+    const handleCompleteAndUncompleteTask = (index: number) => {
+        const updatedTasks = tasks.map((task, i) =>
             i === index ? { ...task, completed: !task.completed } : task
         );
-        setLocalTasks(updatedTasks);
-        postTasks(updatedTasks);
+        setTasks(updatedTasks);
+        postTasksInLocalStorage(updatedTasks);
     };
 
     const handleRemoveTask = (index: number) => {
-        const updatedTasks = localTasks.filter((_, i) => i !== index);
-        setLocalTasks(updatedTasks);
-        postTasks(updatedTasks);
+        const updatedTasks = tasks.filter((_, i) => i !== index);
+        setTasks(updatedTasks);
+        postTasksInLocalStorage(updatedTasks);
     };
 
-    function getTasks() {
+    function loadTasksFromLocalStorage() {
         const storedTasks = window.localStorage.getItem(localStorageTaskskey);
         if (storedTasks) {
             const parsedTasks: Task[] = JSON.parse(storedTasks);
-            if (Array.isArray(parsedTasks)) {
-                setLocalTasks(parsedTasks);
-            }
+            setTasks(parsedTasks);
         }
     }
 
-    function postTasks(updatedTasks: Task[]) {
+    const loadTasksFromDatabase = async () => {
+        try {
+            const tasksFromDatabase = await getTasksFromDatabase(userID);
+            if (tasksFromDatabase) {
+                const parsedTasks: Task[] = JSON.parse(JSON.stringify(tasksFromDatabase));
+                setTasks(parsedTasks);
+            } else {
+                console.warn("No tasks found in the database, loading from local storage.");
+                loadTasksFromLocalStorage();
+            }
+        } catch (error: any) {
+            console.warn(`Error loading tasks from database: ${error.message}`);
+            console.warn("Loading tasks from local storage instead.");
+            loadTasksFromLocalStorage();
+        }
+    };
+
+    function postTasksInLocalStorage(updatedTasks: Task[]) {
         window.localStorage.setItem(localStorageTaskskey, JSON.stringify(updatedTasks));
     }
 
     useEffect(() => {
-        getTasks();
-        getDocTasks(uid);
-    }, []);
+        if (!tasksHasLoaded) {
+            loadTasksFromDatabase().finally(() => {
+                setTasksHasLoaded(true);
+            });
+        }
+    }, [tasksHasLoaded]);
 
+    // Listen to task state modification and sync with the database
     useEffect(() => {
-        updateTaskDoc(localTasks, uid).catch((e) => {
-            console.error("Erreur lors de la mis à jour de la tâche: " + e);
-        });
-    }, [localTasks])
-
-    useEffect(() => {
-        const addTask = async () => {
-            if (newTask.trim() !== "") {
-                const newId = localTasks.length > 0 ? localTasks[localTasks.length - 1].id + 1 : 1;
-                const task: Task = { id: newId, label: newTask, completed: false };
-
-                const updatedTasks = [...localTasks, task];
-                setLocalTasks(updatedTasks);
-                postTasks(updatedTasks);
-                setNewTask("");
-
-                if (uid.trim().length === 0) return;
-
-                await updateTaskDoc(updatedTasks, uid).catch((e) => {
-                    console.error("Erreur lors de la création de la tâche: " + e);
-                });
+        const syncTasksToDatabase = async () => {
+            if (userID && tasks.length !== 0) {
+                try {
+                    await syncTasks(tasks, userID); // Sync tasks with database
+                    console.log("Tasks successfully synced with database.");
+                } catch (error: any) {
+                    console.warn(`Sync tasks with database error: ${error.message}`);
+                    console.warn("Tasks will be saved in local storage instead.");
+                }
             }
         };
-
-        addTask();
-    }, [newTask]);
+        syncTasksToDatabase();
+    }, [tasks]);
 
     return (
         <div className="w-full h-full space-y-2 pt-2 px-5">
             {
-                localTasks.map((task, index) => (
+                tasks.map((task, index) => (
                     <div key={index}>
                         <TaskCard 
                             task={task}
                             index={index}
-                            changeCallback={handleUpdateTask}
+                            changeCallback={handleCompleteAndUncompleteTask}
                             removeCallback={handleRemoveTask}
                         />
                     </div>
