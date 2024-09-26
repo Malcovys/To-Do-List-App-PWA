@@ -33,21 +33,18 @@ export async function signInWithGoogle ()  {
 export async function syncTasks(tasks: DocumentData, uid: string | null) {
   if (uid == null) {
     console.error("UID is null, cannot sync tasks.");
-    return -1;
+    return false;
   }
-
   try {
     const userDoc = doc(firestore, `users/${uid}`);
-    
     const docData = {
       tasks: tasks
     };
-
     await setDoc(userDoc, docData, { merge: true });
-    return 0; /// Return 0 if success
+    return true;
   } catch (error: any) {
     console.error(`Sync data error: ${error.message}`);
-    return -1; /// Return -1 if error
+    return false;
   }
 }
 
