@@ -12,6 +12,17 @@ export interface Task {
 
 function SyncDatabaseBtn ({ auth, callback }: {auth: boolean, callback: (user: User|undefined) => void }) {
   const style = { sync: "bg-green-500", notSync: "bg-slate-500" };
+  const [synced, setSynced] = useState(false);
+
+  window.addEventListener('online', () => {
+    if(auth) {
+      setSynced(true);
+    }
+  });
+  
+  window.addEventListener('offline', () => {
+    setSynced(false);
+  });
 
   const handleClick = async () => {
     const user = await signInWithGoogle().catch((e) => {
@@ -32,27 +43,23 @@ function SyncDatabaseBtn ({ auth, callback }: {auth: boolean, callback: (user: U
         <path d="M3 12A9 3 0 0 0 21 12"/>
       </svg>
       <div className="relative">
-        <div className={cn("absolute right-0 bottom-0 size-2 rounded-full",auth ? style.sync : style.notSync)}></div>
+        <div className={cn("absolute right-0 bottom-0 size-2 rounded-full",synced ? style.sync : style.notSync)}></div>
       </div>
     </button>
   )
 }
 
 function App() {
-  const [uid, setUid] = useState("");
   const [auth, setAuth] = useState(false);
 
   const handleSingIn = async (user:User|undefined) => {
     if (user == undefined) return;
-    setUid(user.uid); // Mettre à jour l'état avec l'UID
     setAuth(true);
     window.localStorage.setItem(localStorageUidKey, user.uid);
   }
 
   useEffect(() => {
       const uid = window.localStorage.getItem(localStorageUidKey)
-      setUid(uid ? uid : "");
-
       if(uid && uid.trim().length > 0) setAuth(true);
   }, [])
 
