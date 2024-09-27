@@ -4,6 +4,7 @@ import TaskCard from "./TaskCard";
 import TaskCreator from "./TaskCreator";
 import { userID } from "../../layout/Layout";
 import { getTasksFromDatabase, syncTasks } from "../../database/firebase";
+import TasksFrame from "./TasksFrame";
 
 const Tasks = () => {
     const unsyncedTasksKey = "unsyncedTasks";
@@ -168,16 +169,22 @@ const Tasks = () => {
 
     return (
         <div className="w-full h-full space-y-2 pt-2 px-5">
-            {tasks.map((task, index) => (
-                <div key={index}>
-                    <TaskCard
-                        task={task}
-                        index={index}
-                        changeCallback={handleCompleteAndUncompleteTask}
-                        removeCallback={handleRemoveTask}
-                    />
-                </div>
-            ))}
+        {
+            tasksHasLoaded ? (
+            <div className="overflow-y-auto h-[85vh] flex-col space-y-3">
+                {tasks.map((task, index) => 
+                    (<div key={index}>
+                        <TaskCard task={task} index={index}
+                            changeCallback={handleCompleteAndUncompleteTask}
+                            removeCallback={handleRemoveTask}
+                        />
+                    </div>)
+                )}
+            </div>
+            ) : (
+                <TasksFrame count={3}/>
+                )
+            }
             <div className="absolute bottom-5 right-7">
                 <TaskCreator submitCallback={handleNewTask} />
             </div>

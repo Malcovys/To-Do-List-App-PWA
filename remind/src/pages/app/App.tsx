@@ -85,12 +85,14 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-4 w-full h-full">
       <div className="flex items-center justify-between shadow-lg px-3 h-16">
         <h1 className="font-semibold text-2xl">To-Do list</h1>
         <SyncDatabaseBtn auth={auth} callback={handleSignIn} />
       </div>
-      <Tasks />
+      <div className="w-full h-full">
+        <Tasks />
+      </div>
     </div>
   );
 };
