@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "core-js": "^3.38.1",
+    "dotenv": "^16.4.5",
     "emoji-picker-react": "^4.12.0",
     "firebase": "^10.13.2",
     "framer-motion": "^11.5.6",

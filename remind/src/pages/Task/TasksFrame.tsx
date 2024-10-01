@@ -1,5 +1,6 @@
 
-const TasksFrame = ({ count }: {count:number}) => {
+const TasksFrame = () => {
+  const count = 3;
   const tasks = Array.from({ length: count }, (_, index) => ({
     id: index,
   }));

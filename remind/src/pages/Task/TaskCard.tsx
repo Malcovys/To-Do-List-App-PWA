@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { MagicCard } from "../../components/magicui/magic-card";
-import { Task } from "./App";
+import { Task } from "./interface/Task";
 
 const TaskCard: React.FC<{
   task:Task,
@@ -8,11 +8,11 @@ const TaskCard: React.FC<{
   changeCallback:(index:number) => void | null, 
   removeCallback:(index:number) => void | null
 }> = ({task, index, changeCallback, removeCallback}) => {
-  const [completed, SetCompleted] = useState(task.completed);
+  const [completed, setCompleted] = useState(task.completed);
 
 
   const handleChange = () => {
-    SetCompleted(!task.completed);
+    setCompleted(!task.completed);
     if(changeCallback != null) changeCallback(index);
   }
 

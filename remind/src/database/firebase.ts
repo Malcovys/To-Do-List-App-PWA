@@ -3,13 +3,13 @@ import { doc, DocumentData, getDoc, getFirestore, setDoc } from "firebase/firest
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCN3JmbOWozCH3c9fihNvQebwLfto0cfJM",
-  authDomain: "remind-d9d5f.firebaseapp.com",
-  projectId: "remind-d9d5f",
-  storageBucket: "remind-d9d5f.appspot.com",
-  messagingSenderId: "854741784842",
-  appId: "1:854741784842:web:af8123ae6546697c3d02f3",
-  measurementId: "G-DZC50REEE9"
+  apiKey: import.meta.env.VITE_FIRE_BASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIRE_BASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIRE_BASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIRE_BASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIRE_BASE_MESSAGIN_SENDER_ID,
+  appId: import.meta.env.VITE_FIRE_BASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIRE_BASE_MEASUREMENT_ID
 };
 
 
@@ -30,27 +30,30 @@ export async function signInWithGoogle ()  {
 }
 
 // db query
-export async function syncTasks(tasks: DocumentData, uid: string | null) {
+export async function syncTasks(tasks: DocumentData, uid: string|null|undefined) {
   if (uid == null) {
     console.error("UID is null, cannot sync tasks.");
     return false;
   }
-  try {
+
+  try 
+  {
     const userDoc = doc(firestore, `users/${uid}`);
     const docData = {
       tasks: tasks
     };
+
     await setDoc(userDoc, docData, { merge: true });
     return true;
-  } catch (error: any) {
+  } 
+  catch (error: any) 
+  {
     console.error(`Sync data error: ${error.message}`);
     return false;
   }
 }
 
-export async function getTasksFromDatabase(uid: string | null) {
-  if (uid == null) return;
-
+export async function getTasksFromDatabase(uid: string) : Promise<[]|undefined> {
   const userDoc = doc(firestore, `users/${uid}`);
     const userSnapshot = await getDoc(userDoc);
 
@@ -58,6 +61,6 @@ export async function getTasksFromDatabase(uid: string | null) {
     return userSnapshot.data().tasks;
   } else {
     console.log("No such document!");
-    return null;
+    return undefined;
   }
 }
