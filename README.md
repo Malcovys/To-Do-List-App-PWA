@@ -32,8 +32,8 @@ This project is a **To-Do List** application built with **React**, **TypeScript*
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/your-username/todo-list-pwa.git
-cd todo-list-pwa
+git clone https://github.com/Malcovys/To-Do-List-App-PWA.git
+cd To-Do-List-App-PWA
 ```
 
 2. **Install dependencies**:
