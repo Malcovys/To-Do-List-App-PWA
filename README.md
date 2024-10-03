@@ -53,7 +53,6 @@ VITE_FIRE_BASE_PROJECT_ID=your-project-id
 VITE_FIRE_BASE_STORAGE_BUCKET=your-storage-bucket
 VITE_FIRE_BASE_MESSAGING_SENDER_ID=your-messaging-sender-id
 VITE_FIRE_BASE_APP_ID=your-app-id
-VITE_FIRE_BASE_MEASUREMENT_ID=your-measurement-id
 ```
 
 4. **Run the app in development mode**:
