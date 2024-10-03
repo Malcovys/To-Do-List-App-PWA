@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import Tasks from "./pages/Task/Tasks";
 import { SyncDatabaseBtn } from "./pages/sync/SyncDatabaseBtn";
-import { getUserIdFromLocalStorage } from "./pages/helper/localStorage";
+import { getUserIdFromLocalStorage } from "./helper/localStorage";
+import ReloadPrompt from "./components/reload-prompt/ReloadPrompt";
 
 interface AppContextType {
   online: boolean;
@@ -56,6 +57,7 @@ const App = () => {
 
   return (
     <div className="flex flex-col space-y-4 w-full h-full">
+      <ReloadPrompt/>
       {
         !loading ? (
           <AppContext.Provider 

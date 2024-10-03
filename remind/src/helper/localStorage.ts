@@ -1,4 +1,4 @@
-import { Task } from "../Task/interface/Task";
+import { Task } from "../pages/Task/interface/Task";
 
 const syncedTaskskey = import.meta.env.VITE_APP_LOCAL_STORAGE_SYNCED_TASKS_KEY;
 const unsyncedTasksKey = import.meta.env.VITE_APP_LOCAL_STORAGE_UNSYNCED_TASKS_KEY;

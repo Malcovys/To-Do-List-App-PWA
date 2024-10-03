@@ -12,7 +12,7 @@ import {
     getUnsyncedTasksFromLocalStorage,
     storeSyncedTasks,
     storeUnsyncedTasks
-} from "../helper/localStorage";
+} from "../../helper/localStorage";
 
 const Tasks = () => {
     const { 
