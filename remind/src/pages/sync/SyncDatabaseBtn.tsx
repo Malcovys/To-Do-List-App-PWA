@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useApp } from "../../App";
 import { cn } from "../../components/lib/utils";
-import { signInWithGoogle } from "../../database/firebase";
+import { signInWithGoogle } from "../../firebase/firebase";
 import { getUserIdFromLocalStorage, storeUserId } from "../../helper/localStorage";
 
 export const SyncDatabaseBtn = () => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useApp } from "../../App";
 import TaskCard from "./TaskCard";
 import TaskCreator from "./TaskCreator";;
-import { getTasksFromDatabase, syncTasks } from "../../database/firebase";
+import { getTasksFromDatabase, syncTasks } from "../../firebase/firebase";
 import TasksFrame from "./TasksFrame";
 import { Task } from "./interface/Task";
 import { 
